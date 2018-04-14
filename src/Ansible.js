@@ -10,8 +10,8 @@ export default class Ansible {
   constructor(playbook, ...params) {
     // Prevent running the command concurrently
     if(!_executing) {
+      params.unshift(playbook);
       _executing = true;
-      params.unshift(playbook)
       this.exec(params);
     }
   }
@@ -21,7 +21,7 @@ export default class Ansible {
     _child = spawn('ansible-playbook', params, {
       // Pipe the output, including colors, to the console
       shell: true,
-      stdio: 'inherit'
+      stdio: 'inherit',
     }).on('close', function() {
       _executing = false;
     });
