@@ -1,29 +1,27 @@
-import { spawn }  from 'child_process';
-
-// Internal reference to spawned process
-let _child;
+import { spawn } from 'child_process';
 
 // Track if the process is currently running
-let _executing = false;
+let executing = false;
 
 export default class Ansible {
   constructor(playbook, ...params) {
     // Prevent running the command concurrently
-    if(!_executing) {
+    if (!executing) {
       params.unshift(playbook);
-      _executing = true;
+      executing = true;
       this.exec(params);
     }
   }
 
   exec(params) {
-    // Update the internal spawn reference;
-    _child = spawn('ansible-playbook', params, {
+    spawn('ansible-playbook', params, {
       // Pipe the output, including colors, to the console
       shell: true,
       stdio: 'inherit',
-    }).on('close', function() {
-      _executing = false;
+    }).on('close', () => {
+      executing = false;
     });
+
+    return this;
   }
 }

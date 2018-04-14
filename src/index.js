@@ -6,9 +6,9 @@ import Conf from './Conf';
 const conf = new Conf();
 
 // Watch for any changes to the nginx conf files
-let watcher = chokidar
+chokidar
   .watch(['nginx/nginx.conf', 'nginx/conf.d'])
-  .on('all', (event, path) => {
+  .on('all', () => {
     // Upon change, reload the nginx conf files
     conf.reload();
   });
